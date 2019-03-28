@@ -10,6 +10,7 @@ variable "count" {
   default = "1"
 }
 
+variable "instance_image_ocid" {}
 variable "subnet_id" {}
 variable "domain_name" {}
 variable "region" {}
@@ -26,11 +27,11 @@ variable "ssh_public_key_openssh" {}
 variable "ssh_private_key" {}
 
 variable "docker_ver" {
-  default = "17.06.2.ol"
+  default = "18.09.1.ol"
 }
 
 variable "oracle_linux_image_name" {
-  default = "Oracle-Linux-7.5-2018.10.16-0"
+  default = "Oracle-Linux-7.6-2019.02.20-0"
 }
 
 # Kubernetes

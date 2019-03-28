@@ -1,8 +1,4 @@
-# Prevent oci_core_images image list from changing underneath us.
-data "oci_core_images" "ImageOCID" {
-  compartment_id = "${var.compartment_ocid}"
-  display_name   = "${var.oracle_linux_image_name}"
-}
+
 
 # Cloud call to get a list of Availability Domains
 data "oci_identity_availability_domains" "ADs" {
@@ -47,14 +43,6 @@ data "template_file" "kube-apiserver" {
     domain_name      = "${var.domain_name}"
     k8s_ver          = "${var.k8s_ver}"
     etcd_endpoints   = "${var.etcd_endpoints}"
-  }
-}
-
-data "template_file" "kubelet-service" {
-  template = "${file("${path.module}/scripts/kubelet.service")}"
-
-  vars = {
-    k8s_ver = "${var.k8s_ver}"
   }
 }
 
@@ -132,7 +120,6 @@ data "template_file" "kube_master_cloud_init_file" {
     kube_rbac_content                        = "${base64gzip(data.template_file.kube-rbac.rendered)}"
     master_kubeconfig_template_content       = "${base64gzip(data.template_file.master-kubeconfig.rendered)}"
     kube_scheduler_template_content          = "${base64gzip(data.template_file.kube-scheduler.rendered)}"
-    kubelet_service_content                  = "${base64gzip(data.template_file.kubelet-service.rendered)}"
     ca-pem-content                           = "${base64gzip(var.root_ca_pem)}"
     ca-key-content                           = "${base64gzip(var.root_ca_key)}"
     api-server-key-content                   = "${base64gzip(var.api_server_private_key_pem)}"

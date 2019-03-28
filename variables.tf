@@ -49,6 +49,19 @@ variable "network_subnet_dns" {
 }
 
 
+variable "instance_image_ocid" {
+  type = "map"
+
+  default = {
+    // See https://docs.us-phoenix-1.oraclecloud.com/images/
+    // Oracle-provided image "Oracle-Linux-7.5-2018.10.16-0"
+    us-phoenix-1 = "ocid1.image.oc1.phx.aaaaaaaaoqj42sokaoh42l76wsyhn3k2beuntrh5maj3gmgmzeyr55zzrwwa"
+    us-ashburn-1   = "ocid1.image.oc1.iad.aaaaaaaageeenzyuxgia726xur4ztaoxbxyjlxogdhreu3ngfj2gji3bayda"
+    eu-frankfurt-1 = "ocid1.image.oc1.eu-frankfurt-1.aaaaaaaaitzn6tdyjer7jl34h2ujz74jwy5nkbukbh55ekp6oyzwrtfa4zma"
+    uk-london-1    = "ocid1.image.oc1.uk-london-1.aaaaaaaa32voyikkkzfxyo4xbdmadc2dmvorfxxgdhpnk6dw64fa3l4jh7wa"
+  }
+}
+
 variable "domain_name" {
   default = "kubernetes.oraclevcn.com"
 }
@@ -325,7 +338,7 @@ variable "api_server_admin_token" {
 }
 
 variable "docker_ver" {
-  default = "17.06.2.ol"
+  default = "18.09.1.ol"
 }
 
 variable "etcd_ver" {
@@ -349,19 +362,19 @@ variable "k8s_dns_ver" {
 }
 
 variable "master_ol_image_name" {
-  default = "Oracle-Linux-7.5-2018.10.16-0"
+  default = "Oracle-Linux-7.6-2019.02.20-0"
 }
 
 variable "worker_ol_image_name" {
-  default = "Oracle-Linux-7.5-2018.10.16-0"
+  default = "Oracle-Linux-7.6-2019.02.20-0"
 }
 
 variable "etcd_ol_image_name" {
-  default = "Oracle-Linux-7.5-2018.10.16-0"
+  default = "Oracle-Linux-7.6-2019.02.20-0"
 }
 
 variable "nat_ol_image_name" {
-  default = "Oracle-Linux-7.5-2018.10.16-0"
+  default = "Oracle-Linux-7.6-2019.02.20-0"
 }
 
 variable "control_plane_subnet_access" {
@@ -488,7 +501,7 @@ variable "flexvolume_driver_user_private_key_password" {
 
 # Volume provisioner
 variable "volume_provisioner_version" {
-  default = "0.7.0"
+  default = "0.10.0"
 }
 
 variable "volume_provisioner_user_ocid" {

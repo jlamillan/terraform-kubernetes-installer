@@ -1,6 +1,9 @@
 variable "network_cidrs" {
   type = "map"
 }
+
+variable "region" {}
+
 variable "availability_domain" {}
 variable "compartment_ocid" {}
 variable "display_name_prefix" {}
@@ -9,6 +12,8 @@ variable "hostname_label_prefix" {}
 variable "shape" {
   default = "VM.Standard1.1"
 }
+
+variable "instance_image_ocid" {}
 
 variable "subnet_id" {}
 variable "subnet_name" {}
@@ -20,11 +25,11 @@ variable "label_prefix" {
 }
 
 variable "docker_ver" {
-  default = "17.06.2.ol"
+  default = "18.09.1.ol"
 }
 
 variable "oracle_linux_image_name" {
-  default = "Oracle-Linux-7.5-2018.10.16-0"
+  default = "Oracle-Linux-7.6-2019.02.20-0"
 }
 
 variable "etcd_ver" {

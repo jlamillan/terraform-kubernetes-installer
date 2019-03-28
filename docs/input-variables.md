@@ -60,16 +60,16 @@ flannel_backend                     | VXLAN                   | Backend to use f
 ### Software Versions Installed on OCI Instances
 name                                | default            | description
 ------------------------------------|--------------------|------------
-docker_ver                          | 17.06.2.ol                     | Version of Docker to install
+docker_ver                          | 18.09.1.ol                     | Version of Docker to install
 etcd_ver                            | v3.2.2                         | Version of etcd to install
 flannel_ver                         | v0.9.1                         | Version of Flannel to install
 k8s_ver                             | 1.8.5                          | Version of K8s to install (master and workers)
 k8s_dns_ver                         | 1.14.2                         | Version of Kube DNS to install
 k8s_dashboard_ver                   | 1.6.3                          | Version of Kubernetes dashboard to install
-master_ol_image_name                | Oracle-Linux-7.5-2018.10.16-0  | Image name of an Oracle-Linux-7.X image to use for masters
-worker_ol_image_name                | Oracle-Linux-7.5-2018.10.16-0  | Image name of an Oracle-Linux-7.X image to use for workers
-etcd_ol_image_name                  | Oracle-Linux-7.5-2018.10.16-0  | Image name of an Oracle-Linux-7.X image to use for etcd nodes
-nat_ol_image_name                   | Oracle-Linux-7.5-2018.10.16-0  | Image name of an Oracle-Linux-7.X image to use for NAT instances (if applicable)
+master_ol_image_name                | Oracle-Linux-7.6-2019.02.20-0  | Image name of an Oracle-Linux-7.X image to use for masters
+worker_ol_image_name                | Oracle-Linux-7.6-2019.02.20-0  | Image name of an Oracle-Linux-7.X image to use for workers
+etcd_ol_image_name                  | Oracle-Linux-7.6-2019.02.20-0  | Image name of an Oracle-Linux-7.X image to use for etcd nodes
+nat_ol_image_name                   | Oracle-Linux-7.6-2019.02.20-0  | Image name of an Oracle-Linux-7.X image to use for NAT instances (if applicable)
 
 #### OCI Plugins
 name                                     | default   | description

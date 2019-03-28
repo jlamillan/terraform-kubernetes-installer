@@ -115,44 +115,15 @@ systemctl disable firewalld.service
 
 ## Install Flex Volume Driver for OCI
 #####################################
-mkdir -p /usr/libexec/kubernetes/kubelet-plugins/volume/exec/oracle~oci/
-curl -L --retry 3 https://github.com/oracle/oci-flexvolume-driver/releases/download/${flexvolume_driver_version}/oci -o/usr/libexec/kubernetes/kubelet-plugins/volume/exec/oracle~oci/oci
-chmod a+x /usr/libexec/kubernetes/kubelet-plugins/volume/exec/oracle~oci/oci
+#mkdir -p /usr/libexec/kubernetes/kubelet-plugins/volume/exec/oracle~oci/
+#curl -L --retry 3 https://github.com/oracle/oci-flexvolume-driver/releases/download/${flexvolume_driver_version}/oci -o/usr/libexec/kubernetes/kubelet-plugins/volume/exec/oracle~oci/oci
+#chmod a+x /usr/libexec/kubernetes/kubelet-plugins/volume/exec/oracle~oci/oci
 
 
-## Install kubelet, kubectl, and kubernetes-cni
-###############################################
-yum-config-manager --add-repo http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
-yum search -y kubernetes
-
-VER_IN_REPO=$(repoquery --nvr --show-duplicates kubelet | sort --version-sort | grep ${k8s_ver} | tail -n 1)
-if [[ -z "$${VER_IN_REPO}" ]]; then
-   MAJOR_VER=$(echo ${k8s_ver} | cut -d. -f-2)
-   echo "Falling back to latest version available in: $MAJOR_VER"
-   VER_IN_REPO=$(repoquery --nvr --show-duplicates kubelet | sort --version-sort | grep $MAJOR_VER | tail -n 1)
-   echo "Installing kubelet version: $VER_IN_REPO"
-   yum install -y $VER_IN_REPO
-   ## Replace kubelet binary since rpm at the exact k8s_ver was not available.
-   curl -L --retry 3 http://storage.googleapis.com/kubernetes-release/release/v${k8s_ver}/bin/linux/amd64/kubelet -o /bin/kubelet && chmod 755 /bin/kubelet
-else
-   echo "Installing kubelet version: $VER_IN_REPO"
-   yum install -y $VER_IN_REPO
-fi
-
-# Check if kubernetes-cni was automatically installed as a dependency
-K8S_CNI=$(rpm -qa | grep kubernetes-cni)
-if [[ -z "$${K8S_CNI}" ]]; then
-   echo "Installing: $K8S_CNI"
-   yum install -y kubernetes-cni
-else
-   echo "$K8S_CNI already installed"
-fi
-
-curl -L --retry 3 http://storage.googleapis.com/kubernetes-release/release/v${k8s_ver}/bin/linux/amd64/kubectl -o /bin/kubectl && chmod 755 /bin/kubectl
 
 ## FQDN constructed from live environment since DNS label for the subnet is optional
-sed -e "s/__FQDN_HOSTNAME__/$FQDN_HOSTNAME/g" /etc/kubernetes/manifests/kube-proxy.yaml >/tmp/kube-proxy.yaml
-cat /tmp/kube-proxy.yaml >/etc/kubernetes/manifests/kube-proxy.yaml
+#sed -e "s/__FQDN_HOSTNAME__/$FQDN_HOSTNAME/g" /etc/kubernetes/manifests/kube-proxy.yaml >/tmp/kube-proxy.yaml
+#cat /tmp/kube-proxy.yaml >/etc/kubernetes/manifests/kube-proxy.yaml
 
 ## kubelet for the worker
 ######################################
@@ -162,23 +133,6 @@ AVAILABILITY_DOMAIN=$(jq -r '.availabilityDomain' /tmp/instance_meta.json | sed 
 read COMPARTMENT_ID_0 COMPARTMENT_ID_1 <<< $(jq -r '.compartmentId' /tmp/instance_meta.json | perl -pe 's/(.*?\.){4}\K/ /g' | perl -pe 's/\.+\s/ /g')
 read NODE_ID_0 NODE_ID_1 <<< $(jq -r '.id' /tmp/instance_meta.json | perl -pe 's/(.*?\.){4}\K/ /g' | perl -pe 's/\.+\s/ /g')
 NODE_SHAPE=$(jq -r '.shape' /tmp/instance_meta.json)
-
-sed -e "s/__FQDN_HOSTNAME__/$FQDN_HOSTNAME/g" \
-    -e "s/__EXT_IP__/$EXTERNAL_IP/g" \
-    -e "s/__AVAILABILITY_DOMAIN__/$AVAILABILITY_DOMAIN/g" \
-    -e "s/__COMPARTMENT_ID_PREFIX__/$COMPARTMENT_ID_0/g" \
-    -e "s/__COMPARTMENT_ID_SUFFIX__/$COMPARTMENT_ID_1/g" \
-    -e "s/__NODE_ID_PREFIX__/$NODE_ID_0/g" \
-    -e "s/__NODE_ID_SUFFIX__/$NODE_ID_1/g" \
-    -e "s/__NODE_SHAPE__/$NODE_SHAPE/g" \
-    -e "s/__SWAP_OPTION__/$SWAP_OPTION/g" \
-    /root/services/kubelet.service > /etc/systemd/system/kubelet.service
-
-${reverse_proxy_setup}
-## Wait for k8s master to be available. There is a possible race on pod networks otherwise.
-until [ "$(curl -k --cert /etc/kubernetes/ssl/apiserver.pem --key /etc/kubernetes/ssl/apiserver-key.pem $K8S_API_SERVER_LB/healthz 2>/dev/null)" == "ok" ]; do
-	sleep 3
-done
 
 # Setup CUDA devices before starting kubelet, so it detects the gpu(s)
 /sbin/modprobe nvidia
@@ -196,8 +150,6 @@ fi
 
 sleep $[ ( $RANDOM % 10 )  + 1 ]s
 systemctl daemon-reload
-systemctl enable kubelet
-systemctl start kubelet
 
 yum install -y nfs-utils
 

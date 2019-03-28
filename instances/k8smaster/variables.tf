@@ -1,6 +1,8 @@
 # BMCS
 variable "availability_domain" {}
 
+variable "instance_image_ocid" {}
+
 variable "compartment_ocid" {}
 variable "display_name_prefix" {}
 variable "hostname_label_prefix" {}
@@ -13,6 +15,7 @@ variable "kubernetes_network_plugin" {}
 variable "count" {
   default = "1"
 }
+variable "region" {}
 
 variable "control_plane_subnet_access" {
   description = "Whether instances in the control plane are launched in a public or private subnets"
@@ -36,11 +39,11 @@ variable "label_prefix" {
 variable "ssh_public_key_openssh" {}
 
 variable "docker_ver" {
-  default = "17.06.2.ol"
+  default = "18.09.1.ol"
 }
 
 variable "oracle_linux_image_name" {
-  default = "Oracle-Linux-7.5-2018.10.16-0"
+  default = "Oracle-Linux-7.6-2019.02.20-0"
 }
 
 variable "etcd_ver" {

@@ -60,30 +60,4 @@ if [ -n "$${iqn}" ]; then
     mount -t xfs "/dev/disk/by-path/ip-169.254.2.2:3260-iscsi-$${iqn}-lun-1"  /etcd
 fi
 
-docker run -d \
-        --restart=always \
-	-p 2380:2380 -p 2379:2379 \
-	-v /etc/ssl/certs/ca-bundle.crt:/etc/ssl/certs/ca-bundle.crt \
-	-v /etcd:/$HOSTNAME.etcd \
-	--net=host \
-	quay.io/coreos/etcd:${etcd_ver} \
-	/usr/local/bin/etcd \
-	-name $HOSTNAME \
-	-advertise-client-urls http://$IP_LOCAL:2379 \
-	-listen-client-urls http://$IP_LOCAL:2379,http://127.0.0.1:2379 \
-	-listen-peer-urls http://0.0.0.0:2380 \
-	-discovery ${etcd_discovery_url}
 
-# wait for etcd to become active
-while ! curl -sf -o /dev/null http://$FQDN_HOSTNAME:2379/v2/keys/; do
-	sleep 1
-	echo "Try again"
-done
-
-# Download etcdctl client etcd_ver
-while ! curl -L https://github.com/coreos/etcd/releases/download/${etcd_ver}/etcd-${etcd_ver}-linux-amd64.tar.gz -o /tmp/etcd-${etcd_ver}-linux-amd64.tar.gz; do
-	sleep 1
-	((secs++)) && ((secs==10)) && break
-	echo "Try again"
-done
-tar zxf /tmp/etcd-${etcd_ver}-linux-amd64.tar.gz -C /tmp/ && cp /tmp/etcd-${etcd_ver}-linux-amd64/etcd* /usr/local/bin/

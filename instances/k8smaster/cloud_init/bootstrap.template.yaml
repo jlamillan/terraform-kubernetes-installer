@@ -73,11 +73,6 @@ write_files:
     content: |
       ${master_kubeconfig_template_content}
 # systemd services
-  - path: "/root/services/kubelet.service"
-    permissions: "0600"
-    encoding: "gzip+base64"
-    content: |
-      ${kubelet_service_content}
 
 # Kube certs, tokens
   - path: "/etc/kubernetes/ssl/ca.pem"
