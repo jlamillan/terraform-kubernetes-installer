@@ -13,7 +13,7 @@ variable "shape" {
   default = "VM.Standard1.1"
 }
 
-variable "instance_image_ocid" {}
+variable "instance_image_ocid" {type = "map"}
 
 variable "subnet_id" {}
 variable "subnet_name" {}

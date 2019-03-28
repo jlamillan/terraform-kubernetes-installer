@@ -10,7 +10,7 @@ variable "count" {
   default = "1"
 }
 
-variable "instance_image_ocid" {}
+variable "instance_image_ocid" {type = "map"}
 variable "subnet_id" {}
 variable "domain_name" {}
 variable "region" {}

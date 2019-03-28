@@ -1,7 +1,7 @@
 # BMCS
 variable "availability_domain" {}
 
-variable "instance_image_ocid" {}
+variable "instance_image_ocid" {type = "map"}
 
 variable "compartment_ocid" {}
 variable "display_name_prefix" {}
